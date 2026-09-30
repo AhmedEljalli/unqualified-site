@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="UNQUALIFIED: a 3D physics party game for 4 to 8 players at a cheap, badly organized sports festival.">
+<title>UNQUALIFIED</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@400;500;700;900&family=Permanent+Marker&display=swap">
+<style>
+/* Layout: one dark "chalkboard" column; taped paper labels mark each section, like the game's concept sheets */
+:root{
+  --board:#1c1d22;      /* charcoal backdrop */
+  --board-2:#26282f;    /* raised panels */
+  --paper:#e9dfc9;      /* masking-tape paper labels */
+  --ink:#1b1c21;        /* text on paper */
+  --chalk:#e8e6df;      /* body text on board */
+  --chalk-dim:#a3a29c;  /* secondary text */
+  --smile:#f2c230;      /* smiley yellow */
+  --red:#d8392b;        /* "UN" red */
+  --navy:#23306b;       /* uniform navy */
+  --line:#3a3c44;
+  --display:"Lilita One","Rubik",system-ui,sans-serif;
+  --body:"Rubik",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  --hand:"Permanent Marker","Rubik",cursive;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--board);color:var(--chalk)}
+body{margin:0;font-family:var(--body);font-size:16px;line-height:1.75;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1040px;margin-inline:auto;display:grid;gap:72px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.25;text-wrap:balance;margin:0}
+p{margin:0}
+.en{font-family:var(--hand);letter-spacing:.02em}
+img{max-width:100%;display:block}
+
+/* taped label */
+.tape{display:inline-flex;align-items:baseline;gap:12px;background:var(--paper);color:var(--ink);padding:6px 18px 4px;transform:rotate(-1.2deg);box-shadow:0 2px 0 rgba(0,0,0,.35);position:relative;width:fit-content}
+.tape::before,.tape::after{content:"";position:absolute;top:-8px;width:34px;height:16px;background:rgba(233,223,201,.55)}
+.tape::before{right:-10px;transform:rotate(28deg)}
+.tape::after{left:-10px;transform:rotate(-24deg)}
+.tape h2{font-size:clamp(26px,4vw,34px)}
+.tape .en{font-size:14px;color:#6b665a}
+section{display:grid;gap:24px;min-width:0}
+.lead{max-width:62ch;color:var(--chalk);font-size:17px}
+.dim{color:var(--chalk-dim)}
+
+/* hero */
+.hero{position:relative;margin-inline:-16px;min-height:min(78vh,640px);display:grid;align-items:end;overflow:hidden;border-bottom:4px solid var(--smile)}
+.hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--board) 8%,rgba(28,29,34,.55) 45%,rgba(28,29,34,.1))}
+.hero-inner{position:relative;z-index:1;max-width:1040px;width:100%;margin-inline:auto;padding:120px 16px 40px;display:grid;gap:18px}
+.logo{font-family:var(--hand);font-size:clamp(46px,11vw,110px);line-height:.95;color:var(--navy);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--paper),-3px -3px 0 var(--paper),3px -3px 0 var(--paper),-3px 3px 0 var(--paper),6px 7px 0 rgba(0,0,0,.4)}
+.logo b{color:var(--red);font-weight:400}
+.logo .o{display:inline-grid;place-items:center;width:.82em;height:.82em;border-radius:50%;background:var(--smile);color:var(--ink);font-size:.62em;vertical-align:.08em;box-shadow:0 0 0 .05em var(--ink);text-shadow:none}
+.subtitle{font-family:var(--display);font-size:clamp(30px,6vw,52px);color:var(--paper)}
+.tagline{font-family:var(--hand);color:var(--smile);font-size:clamp(18px,3vw,24px);transform:rotate(-2deg);width:fit-content}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1.5px solid var(--paper);color:var(--paper);padding:4px 14px;border-radius:999px;font-size:14px;font-weight:500;background:rgba(28,29,34,.6)}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.fact{background:var(--board-2);border:1px solid var(--line);padding:18px 20px;display:grid;gap:4px}
+.fact .n{font-family:var(--display);font-size:40px;color:var(--smile);line-height:1.1;font-variant-numeric:tabular-nums}
+.fact .t{color:var(--chalk-dim);font-size:15px}
+
+/* figure frames */
+.shot{position:relative;background:var(--board-2);border:6px solid var(--paper);box-shadow:0 10px 30px rgba(0,0,0,.45);margin:0}
+.shot img{width:100%;height:auto}
+.shot figcaption{position:absolute;bottom:-14px;right:16px;background:var(--smile);color:var(--ink);font-family:var(--hand);font-size:14px;padding:2px 12px;transform:rotate(-2deg)}
+.shot.missing{aspect-ratio:16/9;display:grid;place-items:center;border-style:dashed}
+.shot.missing img{display:none}
+.shot.missing::before{content:attr(data-alt);color:var(--chalk-dim);font-size:15px;padding:24px;text-align:center}
+
+/* session flow (a real sequence) */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;counter-reset:s}
+.flow li{counter-increment:s;background:var(--board-2);border-top:3px solid var(--navy);padding:14px 16px;display:grid;gap:2px}
+.flow li::before{content:counter(s);font-family:var(--display);color:var(--smile);font-size:22px}
+.flow li.final{border-top-color:var(--red)}
+.flow b{font-weight:700}
+.flow span{color:var(--chalk-dim);font-size:14px;font-variant-numeric:tabular-nums}
+
+/* challenges */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{background:var(--board-2);border:1px solid var(--line);padding:22px;display:grid;gap:12px;align-content:start}
+.card h3{font-size:26px;color:var(--paper)}
+.card .en{color:var(--smile);font-size:15px}
+.card ul{margin:0;padding-inline-start:20px;display:grid;gap:4px;color:var(--chalk)}
+.later{display:flex;flex-wrap:wrap;gap:8px}
+.later span{border:1px dashed var(--line);padding:3px 12px;border-radius:4px;color:var(--chalk-dim);font-size:14px}
+
+/* sabotage grid */
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.tool{background:var(--board-2);border:1px solid var(--line);padding:16px;display:grid;gap:6px;align-content:start}
+.tool .num{font-family:var(--display);color:var(--ink);background:var(--paper);width:fit-content;padding:0 10px;font-size:18px;transform:rotate(-2deg)}
+.tool .en{color:var(--smile);font-size:15px}
+.tool p{font-size:14.5px;line-height:1.6}
+.tool .counter{color:var(--chalk-dim)}
+.tool .counter::before{content:"Counter: ";color:var(--paper);font-weight:500}
+.tool.def{border-color:var(--navy);background:linear-gradient(var(--board-2),#20264a)}
+.rules{display:flex;flex-wrap:wrap;gap:10px}
+.rules span{background:var(--navy);color:var(--paper);padding:6px 14px;font-size:14px;font-weight:500}
+.rules span.no{background:var(--red)}
+
+/* cast */
+.cast{display:grid;gap:40px}
+.cast-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:center}
+.cast-row .txt{display:grid;gap:10px}
+.cast-row h3{font-size:30px;color:var(--paper)}
+@media (max-width:760px){.cast-row{grid-template-columns:1fr}}
+
+/* pillars */
+.pillars{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.pillars li{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.pillars b{font-family:var(--display);font-weight:400;font-size:21px;color:var(--smile)}
+@media (max-width:560px){.pillars li{grid-template-columns:1fr;gap:2px}}
+
+footer{color:var(--chalk-dim);font-size:13px;border-top:1px solid var(--line);padding-top:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+a{color:var(--smile)}
+:focus-visible{outline:2px solid var(--smile);outline-offset:3px}
+</style>
+</head>
+<body>
+
+
+<header class="hero">
+  <img class="bg" src="img/arena.jpg" alt="The festival arena: striped hurdles, smiley-face banners, and a crowd on cheap bleachers" onerror="this.remove()">
+  <div class="hero-inner">
+    <div class="logo" aria-label="UNQUALIFIED"><b>UN</b><span class="o">☺</span>UALIFIED</div>
+    <h1 class="subtitle">The sports festival nobody qualified for.</h1>
+    <p class="tagline en">Cheap games. Cheaper dreams.</p>
+    <div class="chips">
+      <span class="chip">Steam · Windows</span>
+      <span class="chip">4–8 players</span>
+      <span class="chip">3D physics party game</span>
+      <span class="chip">No elimination</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="margin-top:56px">
+
+<section>
+  <div class="tape"><h2>The pitch</h2><span class="en">What is it?</span></div>
+  <p class="lead">A group of unqualified contestants entered a cheap, badly organized televised sports festival by mistake. Every challenge starts as a normal, readable sport, then slowly falls apart into physics chaos that the players cause and understand. The comedy comes from play itself: timing, falls, and reactions, not written jokes.</p>
+  <div class="facts">
+    <div class="fact"><span class="n">4–8</span><span class="t">players competing in every session</span></div>
+    <div class="fact"><span class="n">18–25</span><span class="t">minutes per session of three short challenges</span></div>
+    <div class="fact"><span class="n">&lt; 2s</span><span class="t">maximum loss of control from any single hit</span></div>
+    <div class="fact"><span class="n">×1.25</span><span class="t">points multiplier in the final challenge only, for a fair comeback</span></div>
+  </div>
+</section>
+
+<section>
+  <figure class="shot" data-alt="Image: an obstacle race across shipping containers, wooden ramps, and swinging barrels">
+    <img src="img/obstacle-run.jpg" alt="A chaotic obstacle race across shipping containers, wooden ramps, and swinging barrels" loading="lazy" onerror="this.parentNode.classList.add('missing')">
+    <figcaption>Low budget. High drama.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="tape"><h2>One session</h2><span class="en">Start to podium</span></div>
+  <ol class="flow">
+    <li><b>Warm-up lobby</b><span>60–90 s</span></li>
+    <li><b>Challenge pick</b><span>20 s</span></li>
+    <li><b>Challenge one</b><span>4–6 min</span></li>
+    <li><b>Quick results</b><span>20 s</span></li>
+    <li><b>Challenge two</b><span>4–6 min</span></li>
+    <li class="final"><b>Final challenge</b><span>5–7 min · ×1.25</span></li>
+    <li><b>Podium</b><span>45 s</span></li>
+  </ol>
+  <p class="dim">Placement points go 10, 7, 5, 3, with at most two bonus points per challenge. Players who finish early watch from a safe area and vote on a general environmental effect.</p>
+</section>
+
+<section>
+  <div class="tape"><h2>The challenges</h2><span class="en">First two events</span></div>
+  <div class="two">
+    <article class="card">
+      <span class="en">Event 01</span>
+      <h3>The Flame That Refuses to Stay Lit</h3>
+      <p>Carry an unstable flame through obstacles, wind, and water. Crossing first is not enough: whatever flame you have left counts toward your result.</p>
+      <ul>
+        <li>Running fast weakens the flame; careful moves keep it alive</li>
+        <li>A short risky route and a longer safe one</li>
+        <li>Three checkpoints protect your progress</li>
+      </ul>
+    </article>
+    <article class="card">
+      <span class="en">Event 02</span>
+      <h3>Throw Anything</h3>
+      <p>Pick sports gear or junk with different weights and values, then throw it at fixed and moving targets. Each player gets 60 seconds, and only the best three throws count.</p>
+      <ul>
+        <li>Light, medium, and heavy objects</li>
+        <li>Aim, charge, release, and valid-landing checks</li>
+        <li>Fans and slippery floors bend your throws</li>
+      </ul>
+    </article>
+  </div>
+  <div class="later" aria-label="Future challenge ideas">
+    <span>Painted Hurdles</span><span>Illegal Weightlifting</span><span>King of the Podium</span><span>Stadium Mail</span><span>Lucky Hammer</span><span>Runaway Podium</span>
+  </div>
+</section>
+
+<section>
+  <div class="tape"><h2>Sabotage items</h2><span class="en">Mess makes it fun</span></div>
+  <p class="lead">Every tool gives a clear warning, a short effect, a way to counter it, and brief protection after a hit. No tool can ever steal points.</p>
+  <figure class="shot" data-alt="Image: concept sheet of the eight sabotage items">
+    <img src="img/sabotage-items.jpg" alt="Concept sheet of eight sabotage items built from junk and duct tape, each with an in-game usage shot" loading="lazy" onerror="this.parentNode.classList.add('missing')">
+    <figcaption>Same idiots. Different sports.</figcaption>
+  </figure>
+  <div class="tools">
+    <div class="tool"><span class="num">01</span><span class="en">Budget Breeze</span><p>A leaf blower that blasts players and light objects.</p><p class="counter">Brace, or step out of the blast line.</p></div>
+    <div class="tool"><span class="num">02</span><span class="en">Hydro Help</span><p>A water jet that soaks the target and leaves the floor slippery.</p><p class="counter">Dodge the spray or jump the puddle.</p></div>
+    <div class="tool"><span class="num">03</span><span class="en">Sports Delivery System</span><p>A shopping-cart cannon that fires sports balls down the track.</p><p class="counter">Watch the barrel and sidestep.</p></div>
+    <div class="tool"><span class="num">04</span><span class="en">Performance Enhancer</span><p>Sticks to a rival and vibrates, briefly shaking their aim.</p><p class="counter">Short resistance after the first hit.</p></div>
+    <div class="tool"><span class="num">05</span><span class="en">Motivation Horn</span><p>A loud blast that makes nearby players drop what they carry.</p><p class="counter">Stay out of range, or brace.</p></div>
+    <div class="tool"><span class="num">06</span><span class="en">Grip Improvement Mat</span><p>A sticky mat that pins anyone who steps on it for a moment.</p><p class="counter">You can see it, so jump over it.</p></div>
+    <div class="tool"><span class="num">07</span><span class="en">Equipment Stabilizer</span><p>A magnet that pulls metal gear and ruins throws.</p><p class="counter">Let go, or leave the field.</p></div>
+    <div class="tool def"><span class="num">08</span><span class="en">Fair Play Shield</span><p>Blocks incoming stuff and sometimes bounces it back.</p><p class="counter">The one purely defensive tool.</p></div>
+  </div>
+  <div class="rules">
+    <span>Visible and audible warning</span><span>0.5–2.5 s effect</span><span>Always counterable</span><span>Post-hit protection</span><span>Shows who did it</span><span class="no">Never steals points</span>
+  </div>
+</section>
+
+<section>
+  <div class="tape"><h2>The cast</h2><span class="en">Meet the contestants</span></div>
+  <div class="cast">
+    <div class="cast-row">
+      <figure class="shot" data-alt="Image: contestant in a wrestling mask, four angles">
+        <img src="img/wrestler.jpg" alt="A stocky contestant in a red wrestling mask, patched singlet, and knee pads, shown from four angles" loading="lazy" onerror="this.parentNode.classList.add('missing')">
+        <figcaption>Contestant #1</figcaption>
+      </figure>
+      <div class="txt">
+        <h3>The contestants</h3>
+        <p>Chunky characters about three heads tall, with big hands and feet that read clearly in the middle of the chaos. Everyone shares one skeleton and one base body, with swappable headwear, top, bottom, shoes, and one accessory.</p>
+        <p class="dim">Cosmetics never change hitboxes, stats, or physics.</p>
+      </div>
+    </div>
+    <div class="cast-row">
+      <figure class="shot" data-alt="Image: robot referee with cap and clipboard, four angles">
+        <img src="img/robot-host.jpg" alt="A worn robot referee with a navy cap, smiling screen face, and clipboard, hovering on blue jets" loading="lazy" onerror="this.parentNode.classList.add('missing')">
+        <figcaption>The Official</figcaption>
+      </figure>
+      <div class="txt">
+        <h3>The Official</h3>
+        <p>A second-hand robot hovering on two jets, clipboard in hand, running the tournament like a world-class event. It announces each challenge, explains the rules in under 20 seconds, and cheers every failure with enthusiasm nobody deserves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="tape"><h2>Design pillars</h2><span class="en">The rules we play by</span></div>
+  <ul class="pillars">
+    <li><b>Understood in seconds</b><span>Each briefing takes 20 seconds or less, then you play.</span></li>
+    <li><b>Readable chaos</b><span>You always know what hit you and who caused it.</span></li>
+    <li><b>Responsive control</b><span>The comedy comes from consequences, not bad controls. No full-time floppy ragdoll.</span></li>
+    <li><b>Comebacks, not gifts</b><span>Trailing players get more options, never a free win.</span></li>
+    <li><b>Built to reuse</b><span>One modular stadium, rebuilt for every event.</span></li>
+  </ul>
+</section>
+
+<footer>
+  <span>UNQUALIFIED is a working title. The festival and all branding are entirely fictional.</span>
+  <span>Images are early concepts, not final assets.</span>
+</footer>
+</main>
+</body>
+</html>
